@@ -20,7 +20,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26 # v3.7.0
       - name: Run static analysis
         run: |
             xcodebuild analyze -project BranchSDK.xcodeproj
@@ -56,12 +56,12 @@ jobs:
     needs: [static-analysis]
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26 # v3.7.0
       - name: Build xcframework
         run: |
             ./scripts/prep_xcframework.sh
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5 # v3.2.1
         with:
           name: release_framework
           path: |
@@ -74,12 +74,12 @@ jobs:
     needs: [static-analysis]
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26 # v3.7.0
       - name: Build xcframework
         run: |
             ./scripts/prep_xcframework_noidfa.sh
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5 # v3.2.1
         with:
           name: framework-noidfa
           path: |
@@ -92,12 +92,12 @@ jobs:
     needs: [static-analysis]
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26 # v3.7.0
       - name: Build static xcframework
         run: |
             ./scripts/prep_static_xcframework.sh
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5 # v3.2.1
         with:
           name: static-framework
           path: |
@@ -110,12 +110,12 @@ jobs:
     needs: [static-analysis]
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26 # v3.7.0
       - name: Build static xcframework
         run: |
             ./scripts/prep_static_xcframework_noidfa.sh
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5 # v3.2.1
         with:
           name: static-framework-noidfa
           path: |
@@ -127,9 +127,9 @@ jobs:
     needs: [build-framework, build-static-framework, build-noidfa-framework, build-static-noidfa-framework]
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26 # v3.7.0
       - name: Set up Ruby 2.7
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@a0102e0972be65f351c307e2d64b9314a57c8073 # v1.324.0
         with:
           ruby-version: '2.7'
       # The CocoaPods dependencies are only used by the
@@ -137,7 +137,7 @@ jobs:
       # Bring in the Ruby deps from the cache for quick availability of
       # pod command. Not using cached Pods folder.
       - name: Restore cache
-        uses: actions/cache@v3
+        uses: actions/cache@6f8efc29b200d32929f49075959781ed54ec270c # v3.5.0
         with:
           path: |
             vendor
@@ -150,7 +150,7 @@ jobs:
           bundle config set --local path vendor
           bundle check || bundle install
       - name: Download build artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a # v3.0.2
       - name: Publish to CocoaPods
         run: |
           # TODO: Authenticate using repo secret
@@ -164,7 +164,7 @@ jobs:
           echo "Current version is $(cat fastlane/.version)."
           echo "version=$(cat fastlane/.version)" >> $GITHUB_OUTPUT
       - name: Create GitHub Release
-        uses: actions/github-script@v6
+        uses: actions/github-script@d7906e4ad0b1822421a7e6a35d5ca353c962f410 # v6.4.1
         with:
           script: |
             const createRelease = require('./.github/custom-scripts/create-release');
@@ -178,7 +178,7 @@ jobs:
               version: tagName,
             });
       - name: Upload Release Assets
-        uses: actions/github-script@v6
+        uses: actions/github-script@d7906e4ad0b1822421a7e6a35d5ca353c962f410 # v6.4.1
         with:
           script: |
             const uploadAsset = require('./.github/custom-scripts/upload-asset');
